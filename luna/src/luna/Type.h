@@ -12,3 +12,5 @@ MAKE_INT(int8);
 MAKE_INT(int16);
 MAKE_INT(int32);
 MAKE_INT(int64);
+
+#undef MAKE_INT

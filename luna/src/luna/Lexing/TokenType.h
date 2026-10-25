@@ -25,7 +25,7 @@ namespace Luna::Lexing
         TY_I64,
     };
 
-    extern const char* TokenToString(TokenType type);
+    extern const char* ToString(TokenType type);
 }
 
 #include <format>
@@ -38,6 +38,6 @@ struct std::formatter<Luna::Lexing::TokenType>
     }
 
     auto format(Luna::Lexing::TokenType type, std::format_context& ctx) const {
-        return std::format_to(ctx.out(), "{}", Luna::Lexing::TokenToString(type));
+        return std::format_to(ctx.out(), "{}", Luna::Lexing::ToString(type));
     }
 };

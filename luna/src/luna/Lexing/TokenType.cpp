@@ -2,7 +2,7 @@
 
 #define TOKEN(type) case TokenType::type: return #type
 
-const char* Luna::Lexing::TokenToString(TokenType type)
+const char* Luna::Lexing::ToString(TokenType type)
 {
     switch (type)
     {
