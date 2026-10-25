@@ -8,6 +8,8 @@ const char* Venera::Lexing::ToString(TokenType type)
     {
         TOKEN(NONE);
         TOKEN(IDENTIFIER);
+        TOKEN(L_PAREN);
+        TOKEN(R_PAREN);
         TOKEN(KW_PROGRAM);
         TOKEN(KW_DO);
         TOKEN(KW_END);
@@ -20,6 +22,8 @@ const char* Venera::Lexing::ToString(TokenType type)
         TOKEN(TY_I16);
         TOKEN(TY_I32);
         TOKEN(TY_I64);
+        TOKEN(LIT_BASE10);
+        TOKEN(LIT_FLOATING);
         default: return "UNKNOWN";
     }
 }

@@ -9,6 +9,9 @@ namespace Venera::Lexing
 
         IDENTIFIER,
 
+        L_PAREN,
+        R_PAREN,
+
         KW_PROGRAM,
         KW_DO,
         KW_END,
@@ -23,6 +26,9 @@ namespace Venera::Lexing
         TY_I16,
         TY_I32,
         TY_I64,
+
+        LIT_BASE10,
+        LIT_FLOATING,
     };
 
     extern const char* ToString(TokenType type);

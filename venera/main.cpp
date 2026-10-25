@@ -9,9 +9,10 @@
 #include <venera/Error.h>
 #include <venera/Lexing/Tokeniser.h>
 
-std::string gInput = R"(PROGRAM DO
-    NAME DO
-        I32 x
+std::string gInput = R"(
+PROGRAM DO
+    DEF I32 Main() DO
+        RETURN 0
     END
 END
 )";

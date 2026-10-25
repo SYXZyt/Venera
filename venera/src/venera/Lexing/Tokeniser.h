@@ -4,12 +4,15 @@
 #include <venera/Lexing/TokenType.h>
 #include <venera/File.h>
 #include <unordered_map>
+#include <functional>
 
 namespace Venera::Lexing
 {
     class Tokeniser final
     {
     private:
+        using NumericCharCheck = std::function<bool(char)>;
+
         static inline std::unordered_map<std::string, TokenType> sKeywords =
         {
             { "PROGRAM", TokenType::KW_PROGRAM },
@@ -43,7 +46,11 @@ namespace Venera::Lexing
 
         void Advance(int count = 1);
 
+        void TryConsumeIntegerSuffix(std::stringstream& lexeme);
+        void TryConsumeFloatingSuffix(std::stringstream& lexeme);
+
         Token BuildIdentifier();
+        Token BuildNumeric(NumericCharCheck check, TokenType type);
 
         Token BuildSingleCharToken(TokenType type);
 

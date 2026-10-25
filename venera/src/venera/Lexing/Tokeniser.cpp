@@ -36,6 +36,35 @@ void Venera::Lexing::Tokeniser::Advance(int count)
     }
 }
 
+void Venera::Lexing::Tokeniser::TryConsumeIntegerSuffix(std::stringstream& lexeme)
+{
+    if ((Current() == 'u' && Peek() == 'l') || (Current() == 'l' && Peek() == 'u'))
+    {
+        if (IsIdentifier(Peek(2)))
+            return;
+
+        lexeme << Current();
+        lexeme << Peek();
+        Advance(2);
+        return;
+    }
+
+    if (Current() == 'u' || Current() == 'l' && !IsIdentifier(Peek()))
+    {
+        lexeme << Current();
+        Advance();
+    }
+}
+
+void Venera::Lexing::Tokeniser::TryConsumeFloatingSuffix(std::stringstream& lexeme)
+{
+    if (Current() == 'f' && !IsIdentifier(Peek()))
+    {
+        lexeme << Current();
+        Advance();
+    }
+}
+
 Venera::Lexing::Token Venera::Lexing::Tokeniser::BuildIdentifier()
 {
     std::stringstream lexeme;
@@ -58,6 +87,57 @@ Venera::Lexing::Token Venera::Lexing::Tokeniser::BuildIdentifier()
     return Token
     {
         .lexeme = std::move(lexemeStr),
+        .file = mFile,
+        .line = line,
+        .col = column,
+        .type = type,
+    };
+}
+
+Venera::Lexing::Token Venera::Lexing::Tokeniser::BuildNumeric(NumericCharCheck check, TokenType type)
+{
+    std::stringstream lexeme;
+    int column = mCol;
+    int line = mLine;
+
+    do
+    {
+        lexeme << Current();
+        Advance();
+    } while (check(Current())); // We use a delegate to check since dec and hex have different characters
+
+    // If we are parsing a decimal (not hex) and we have a . followed by either f or more numbers
+    // then we have to parse a floating point
+    if (
+        type == TokenType::LIT_BASE10 &&
+        Current() == '.' &&
+        (IsDigit(Peek()) ||
+            (Peek() == 'f' && !IsIdentifier(Peek(2)))))
+    {
+        type = TokenType::LIT_FLOATING;
+
+        // Consume .
+        lexeme << Current();
+        Advance();
+
+        while (IsDigit(Current()))
+        {
+            lexeme << Current();
+            Advance();
+        }
+
+        // Consume the f
+        TryConsumeFloatingSuffix(lexeme);
+    }
+    else
+    {
+        // Consume u, l, lu, or ul
+        TryConsumeIntegerSuffix(lexeme);
+    }
+
+    return Token
+    {
+        .lexeme = std::move(lexeme.str()),
         .file = mFile,
         .line = line,
         .col = column,
@@ -89,10 +169,23 @@ void Venera::Lexing::Tokeniser::Tokenise()
             Advance();
             continue;
         }
-
-        if (IsIdentifier(Current()))
+        // Since identifiers can contain numbers, we have to handle numbers first
+        // otherwise numbers will be identifiers
+        if (IsDigit(Current()))
         {
-            mTokens.push_back(BuildIdentifier());
+            mTokens.push_back(std::move(BuildNumeric(IsDigit, TokenType::LIT_BASE10)));
+        }
+        else if (IsIdentifier(Current()))
+        {
+            mTokens.push_back(std::move(BuildIdentifier()));
+        }
+        else if (Current() == '(')
+        {
+            mTokens.push_back(std::move(BuildSingleCharToken(TokenType::L_PAREN)));
+        }
+        else if (Current() == ')')
+        {
+            mTokens.push_back(std::move(BuildSingleCharToken(TokenType::R_PAREN)));
         }
         else
         {
