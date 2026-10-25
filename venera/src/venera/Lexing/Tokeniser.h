@@ -15,6 +15,7 @@ namespace Venera::Lexing
             { "PROGRAM", TokenType::KW_PROGRAM },
             { "DO", TokenType::KW_DO },
             { "END", TokenType::KW_END },
+            { "NAME", TokenType::KW_END },
 
             { "U8", TokenType::TY_U8 },
             { "U16", TokenType::TY_U16 },
