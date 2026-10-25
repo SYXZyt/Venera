@@ -1,6 +1,9 @@
 cmake_minimum_required(VERSION 3.10)
 project(Venera)
 
+set(CMAKE_CXX_STANDARD 23)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
 add_executable(luna main.cpp
         src/luna/Type.h
         src/luna/Lexing/TokenType.h
@@ -17,6 +20,7 @@ add_executable(luna main.cpp
         src/luna/ErrorCode.h
         src/luna/ErrorCode.cpp
         src/luna/Error.cpp
+        src/luna/Lexing/Tokeniser.cpp
 )
 
 target_include_directories(luna PUBLIC src)

@@ -3,36 +3,56 @@
 #include <luna/Lexing/Token.h>
 #include <luna/Lexing/TokenType.h>
 #include <luna/File.h>
+#include <unordered_map>
 
 namespace Luna::Lexing
 {
     class Tokeniser final
     {
     private:
+        static inline std::unordered_map<std::string, TokenType> sKeywords =
+        {
+            { "PROGRAM", TokenType::KW_PROGRAM },
+            { "DO", TokenType::KW_DO },
+            { "END", TokenType::KW_END },
+
+            { "U8", TokenType::TY_U8 },
+            { "U16", TokenType::TY_U16 },
+            { "U32", TokenType::TY_U32 },
+            { "U64", TokenType::TY_U64 },
+
+            { "I8", TokenType::TY_I8 },
+            { "I16", TokenType::TY_I16 },
+            { "I32", TokenType::TY_I32 },
+            { "I64", TokenType::TY_I64 },
+        };
+
         std::vector<Token> mTokens;
         std::shared_ptr<File> mFile;
 
-        char* mContentBuffer;
+        const char* mContentBuffer;
         size_t mContentSize;
 
         int mPos = -1;   // Position into text buffer
         int mLine = 0;  // Current line
         int mCol = -1; // Current position on the line
 
-        bool mFailed = false;
-
         char Current() const;
         char Peek(size_t offset = 1) const;
 
-        void Advance();
+        void Advance(int count = 1);
+
+        Token BuildIdentifier();
+
+        Token BuildSingleCharToken(TokenType type);
 
     public:
-        bool Failed() const {
-            return mFailed;
+        const std::vector<Token>& GetTokens() const {
+            return mTokens;
         }
 
         void Tokenise();
 
-        Tokeniser(std::shared_ptr<File> file);
+        Tokeniser(std::string_view source, std::string_view filename);
     };
 }

@@ -6,6 +6,8 @@
 #include <luna/Lexing/Token.h>
 #include <luna/File.h>
 #include <luna/FileTracker.h>
+#include <luna/Error.h>
+#include <luna/Lexing/Tokeniser.h>
 
 std::string gInput = R"(PROGRAM DO
     NAME DO
@@ -17,8 +19,19 @@ END
 int main(int, char**)
 {
     Luna::FileTracker::Clear();
+    Luna::Error::Clear();
 
-    std::shared_ptr file = Luna::File::FromSource("<stdin>", gInput);
+    Luna::Lexing::Tokeniser lexer(gInput, "<stdin>");
+    lexer.Tokenise();
 
-    Luna::FileTracker::AddRegister(file);
+    if (Luna::Error::Failed())
+    {
+        Luna::Error::ReportFailedFile();
+        return 1;
+    }
+
+    for (const Luna::Lexing::Token& t : lexer.GetTokens())
+        std::println("{}", t);
+
+    return 0;
 }

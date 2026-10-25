@@ -26,6 +26,6 @@ struct std::formatter<Luna::Lexing::Token>
     }
 
     auto format(const Luna::Lexing::Token& token, std::format_context& ctx) const {
-        return std::format_to(ctx.out(), "<Token: '{}' at {}:{} in {} ({})>", token.lexeme, token.col + 1, token.line + 1, token.file->Name(), token.type);
+        return std::format_to(ctx.out(), "<Token: '{}' at {}:{} in {} ({})>", token.lexeme, token.line + 1, token.col + 1, token.file->Name(), token.type);
     }
 };

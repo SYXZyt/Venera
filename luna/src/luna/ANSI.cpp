@@ -38,5 +38,5 @@ std::string Luna::ANSI::Colours::MakeIndexed(uint8 idx)
     if (!SupportsANSI())
         return "";
 
-    return std::format("\033[38;f;{}m", idx);
+    return std::format("\033[38;5;{}m", idx);
 }
