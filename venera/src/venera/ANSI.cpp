@@ -7,7 +7,7 @@
 #include <unistd.h>
 #endif
 
-bool Luna::ANSI::SupportsANSI()
+bool Venera::ANSI::SupportsANSI()
 {
 #ifdef _WIN32
     HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
@@ -25,7 +25,7 @@ bool Luna::ANSI::SupportsANSI()
 #endif
 }
 
-const char* const Luna::ANSI::Reset()
+const char* const Venera::ANSI::Reset()
 {
     if (SupportsANSI())
         return "\033[0m";
@@ -33,7 +33,7 @@ const char* const Luna::ANSI::Reset()
     return "";
 }
 
-std::string Luna::ANSI::Colours::MakeIndexed(uint8 idx)
+std::string Venera::ANSI::Colours::MakeIndexed(uint8 idx)
 {
     if (!SupportsANSI())
         return "";

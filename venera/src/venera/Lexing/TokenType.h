@@ -1,7 +1,7 @@
 #pragma once
-#include <luna/Type.h>
+#include <venera/Type.h>
 
-namespace Luna::Lexing
+namespace Venera::Lexing
 {
     enum class TokenType : uint8
     {
@@ -31,13 +31,13 @@ namespace Luna::Lexing
 #include <format>
 
 template <>
-struct std::formatter<Luna::Lexing::TokenType>
+struct std::formatter<Venera::Lexing::TokenType>
 {
     constexpr auto parse(std::format_parse_context& ctx) {
         return ctx.begin();
     }
 
-    auto format(Luna::Lexing::TokenType type, std::format_context& ctx) const {
-        return std::format_to(ctx.out(), "{}", Luna::Lexing::ToString(type));
+    auto format(Venera::Lexing::TokenType type, std::format_context& ctx) const {
+        return std::format_to(ctx.out(), "{}", Venera::Lexing::ToString(type));
     }
 };

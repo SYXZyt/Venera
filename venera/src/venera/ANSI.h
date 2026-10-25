@@ -1,8 +1,8 @@
 #pragma once
 #include <string>
-#include <luna/Type.h>
+#include <venera/Type.h>
 
-namespace Luna::ANSI
+namespace Venera::ANSI
 {
     extern bool SupportsANSI();
     extern const char* const Reset();

@@ -1,11 +1,11 @@
 #include "Helpers.h"
 #include <sstream>
 
-std::string Luna::CharToString(char c) {
+std::string Venera::CharToString(char c) {
     return std::string(1, c);
 }
 
-std::string Luna::RemoveEscape(const std::string& s)
+std::string Venera::RemoveEscape(const std::string& s)
 {
     std::stringstream ss;
 
@@ -15,7 +15,7 @@ std::string Luna::RemoveEscape(const std::string& s)
     return ss.str();
 }
 
-std::string Luna::RemoveEscape(char c)
+std::string Venera::RemoveEscape(char c)
 {
     switch (c)
     {
@@ -29,7 +29,7 @@ std::string Luna::RemoveEscape(char c)
     }
 }
 
-std::string Luna::Replace(const std::string& string, std::string_view from, std::string_view to)
+std::string Venera::Replace(const std::string& string, std::string_view from, std::string_view to)
 {
     if (from.empty())
         return string;
@@ -56,7 +56,7 @@ std::string Luna::Replace(const std::string& string, std::string_view from, std:
     return ss.str();
 }
 
-std::vector<std::string> Luna::Split(const std::string& string, char delim)
+std::vector<std::string> Venera::Split(const std::string& string, char delim)
 {
     std::vector<std::string> result;
     std::stringstream ss(string);
@@ -68,7 +68,7 @@ std::vector<std::string> Luna::Split(const std::string& string, char delim)
     return result;
 }
 
-std::string Luna::Join(const std::string& string, std::span<std::string> strings)
+std::string Venera::Join(const std::string& string, std::span<std::string> strings)
 {
     std::stringstream ss;
 
@@ -83,10 +83,10 @@ std::string Luna::Join(const std::string& string, std::span<std::string> strings
     return ss.str();
 }
 
-std::string Luna::Substring(const std::string& string, size_t offset) {
+std::string Venera::Substring(const std::string& string, size_t offset) {
     return string.substr(offset, string.size() - offset);
 }
 
-std::string Luna::SubstringFromEnd(const std::string& string, size_t offset) {
+std::string Venera::SubstringFromEnd(const std::string& string, size_t offset) {
     return string.substr(string.size() - offset, offset);
 }

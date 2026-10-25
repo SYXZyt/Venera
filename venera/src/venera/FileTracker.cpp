@@ -1,15 +1,15 @@
 #include "FileTracker.h"
 #include <stdexcept>
 
-void Luna::FileTracker::Clear() {
+void Venera::FileTracker::Clear() {
     sTracks.clear();
 }
 
-void Luna::FileTracker::AddRegister(std::shared_ptr<File> file) {
+void Venera::FileTracker::AddRegister(std::shared_ptr<File> file) {
     sTracks[file] = {};
 }
 
-void Luna::FileTracker::AddWarning(std::shared_ptr<File> file)
+void Venera::FileTracker::AddWarning(std::shared_ptr<File> file)
 {
     auto it = sTracks.find(file);
     if (it == sTracks.end())
@@ -18,7 +18,7 @@ void Luna::FileTracker::AddWarning(std::shared_ptr<File> file)
     ++it->second.warningCount;
 }
 
-void Luna::FileTracker::AddError(std::shared_ptr<File> file)
+void Venera::FileTracker::AddError(std::shared_ptr<File> file)
 {
     auto it = sTracks.find(file);
     if (it == sTracks.end())
@@ -27,7 +27,7 @@ void Luna::FileTracker::AddError(std::shared_ptr<File> file)
     ++it->second.errorCount;
 }
 
-void Luna::FileTracker::SetFailed(std::shared_ptr<File> file)
+void Venera::FileTracker::SetFailed(std::shared_ptr<File> file)
 {
     auto it = sTracks.find(file);
     if (it == sTracks.end())
@@ -36,7 +36,7 @@ void Luna::FileTracker::SetFailed(std::shared_ptr<File> file)
     it->second.failed = true;
 }
 
-std::tuple<int, int> Luna::FileTracker::GetCount(std::shared_ptr<File> file)
+std::tuple<int, int> Venera::FileTracker::GetCount(std::shared_ptr<File> file)
 {
     auto it = sTracks.find(file);
     if (it == sTracks.end())
@@ -45,7 +45,7 @@ std::tuple<int, int> Luna::FileTracker::GetCount(std::shared_ptr<File> file)
     return { it->second.errorCount, it->second.warningCount };
 }
 
-std::vector<std::shared_ptr<Luna::File>> Luna::FileTracker::GetErroredOrWarnedFiles()
+std::vector<std::shared_ptr<Venera::File>> Venera::FileTracker::GetErroredOrWarnedFiles()
 {
     std::vector<std::shared_ptr<File>> files;
 

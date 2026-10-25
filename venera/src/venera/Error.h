@@ -2,10 +2,10 @@
 #include <vector>
 #include <optional>
 #include <string_view>
-#include <luna/ErrorCode.h>
-#include <luna/Lexing/Token.h>
+#include <venera/ErrorCode.h>
+#include <venera/Lexing/Token.h>
 
-namespace Luna
+namespace Venera
 {
     class Error final
     {

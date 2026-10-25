@@ -4,7 +4,7 @@
 #include <span>
 #include <type_traits>
 
-namespace Luna
+namespace Venera
 {
     extern std::string CharToString(char c);
     extern std::string RemoveEscape(const std::string& s);

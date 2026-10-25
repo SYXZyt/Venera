@@ -2,20 +2,20 @@
 #include <set>
 #include <vector>
 #include <print>
-#include <luna/ANSI.h>
-#include <luna/FileTracker.h>
+#include <venera/ANSI.h>
+#include <venera/FileTracker.h>
 
-static bool IsErrorCodeWarning(Luna::ErrorCode code) {
-    return Luna::ToString(code)[0] == 'W';
+static bool IsErrorCodeWarning(Venera::ErrorCode code) {
+    return Venera::ToString(code)[0] == 'W';
 }
 
-void Luna::Error::Clear()
+void Venera::Error::Clear()
 {
     sErrorCodes.clear();
     sFailed = false;
 }
 
-void Luna::Error::PrintErrorCodes()
+void Venera::Error::PrintErrorCodes()
 {
     std::set<ErrorCode> printedCodes;
 
@@ -34,10 +34,10 @@ void Luna::Error::PrintErrorCodes()
     }
 
     if (!sErrorCodes.empty())
-        std::println();
+        std::println("");
 }
 
-void Luna::Error::Report(std::string_view message, std::optional<Lexing::Token> token, ErrorCode code)
+void Venera::Error::Report(std::string_view message, std::optional<Lexing::Token> token, ErrorCode code)
 {
     bool isWarning = IsErrorCodeWarning(code);
     if (!isWarning)
@@ -78,7 +78,7 @@ void Luna::Error::Report(std::string_view message, std::optional<Lexing::Token> 
     std::println("Occurred at line {}{}{}, column {}{}{} in '{}{}{}'\n", ANSI::Colours::Purple, t.line + 1, ANSI::Reset(), ANSI::Colours::Purple, t.col + 1, ANSI::Reset(), ANSI::Colours::Yellow, t.file->Name(), ANSI::Reset());
 }
 
-void Luna::Error::ReportFailedFile()
+void Venera::Error::ReportFailedFile()
 {
     auto PrintSuccess = []() { std::println("{}Build successful{}", ANSI::Colours::Green, ANSI::Reset()); };
 

@@ -1,9 +1,9 @@
 #pragma once
-#include <luna/Type.h>
+#include <venera/Type.h>
 
 // We have alot of error codes and remembering to add it to the `ToString` is a pain
 // So we can automate it with a python script
-namespace Luna
+namespace Venera
 {
     enum class ErrorCode : uint16
     {
@@ -23,5 +23,3 @@ namespace Luna
 
     extern const char* ToString(ErrorCode code);
 }
-
-#undef PY_AUTOGEN_BEGIN
