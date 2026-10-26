@@ -10,6 +10,10 @@
 #include <venera/Lexing/Tokeniser.h>
 #include <venera/Parsing/Parser.h>
 
+#include <llvm/IR/LLVMContext.h>
+#include <llvm/IR/Module.h>
+#include <llvm/Support/raw_ostream.h>
+
 std::string gInput = R"(
 PROGRAM DO
     DEF I32 Main DO
@@ -45,6 +49,10 @@ int main(int, char**)
     }
 
     program->Dump(0);
+
+    llvm::LLVMContext context;
+    llvm::Module module("venera", context);
+    module.print(llvm::outs(), nullptr);
 
     return 0;
 }
