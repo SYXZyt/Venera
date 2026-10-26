@@ -22,7 +22,44 @@ std::string Venera::LanguageType::ToString() const
 {
     std::stringstream ss;
 
+    switch (kind)
+    {
+        case LanguageTypeKind::PRIMITIVE:
+        {
+            switch (primitiveType)
+            {
+                case TokenType::TY_U8:
+                    ss << "U8";
+                    break;
+                case TokenType::TY_U16:
+                    ss << "U16";
+                    break;
+                case TokenType::TY_U32:
+                    ss << "U32";
+                    break;
+                case TokenType::TY_U64:
+                    ss << "U64";
+                    break;
+                case TokenType::TY_I8:
+                    ss << "I8";
+                    break;
+                case TokenType::TY_I16:
+                    ss << "I16";
+                    break;
+                case TokenType::TY_I32:
+                    ss << "I32";
+                    break;
+                case TokenType::TY_I64:
+                    ss << "I64";
+                    break;
+                default:
+                    ss << "UNKNOWN";
+                    break;
+            }
 
+            break;
+        }
+    }
 
     return ss.str();
 }

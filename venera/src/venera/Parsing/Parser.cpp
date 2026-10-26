@@ -242,6 +242,8 @@ std::shared_ptr<Venera::Parsing::Block> Venera::Parsing::Parser::ParseBlock()
         std::shared_ptr stmt = ParseStatement();
         if (!stmt)
             break;
+
+        statements.push_back(std::move(stmt));
     }
 
     if (!Expect(Lexing::TokenType::KW_END, "Expected 'END'", ErrorCode::E2003_EXPECTED_BLOCK))
