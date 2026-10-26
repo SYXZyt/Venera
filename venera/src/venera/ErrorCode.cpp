@@ -15,6 +15,12 @@ const char* Venera::ToString(ErrorCode code)
         case ErrorCode::E1003_UNKNOWN_ESCAPE_SEQUENCE: return "E1003";
         case ErrorCode::E1004_UNTERMINATED_STRING: return "E1004";
         case ErrorCode::E1005_UNTERMINATED_CHAR: return "E1005";
+        case ErrorCode::E2000_UNEXPECTED_EOF: return "E2000";
+        case ErrorCode::E2001_NO_PROGRAM: return "E2001";
+        case ErrorCode::E2002_NO_DO: return "E2002";
+        case ErrorCode::E2003_EXPECTED_BLOCK: return "E2003";
+        case ErrorCode::E2004_EXPECTED_STATEMENT: return "E2004";
+        case ErrorCode::E2005_EXPECTED_EXPRESSION: return "E2005";
         default: return "UNKNOWN";
     }
 }

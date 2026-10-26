@@ -19,6 +19,7 @@ namespace Venera::Lexing
             { "DO", TokenType::KW_DO },
             { "END", TokenType::KW_END },
             { "NAME", TokenType::KW_END },
+            { "RETURN", TokenType::KW_RETURN },
 
             { "U8", TokenType::TY_U8 },
             { "U16", TokenType::TY_U16 },

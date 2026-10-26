@@ -169,6 +169,7 @@ void Venera::Lexing::Tokeniser::Tokenise()
             Advance();
             continue;
         }
+
         // Since identifiers can contain numbers, we have to handle numbers first
         // otherwise numbers will be identifiers
         if (IsDigit(Current()))

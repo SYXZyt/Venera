@@ -16,6 +16,7 @@ namespace Venera::Lexing
         KW_DO,
         KW_END,
         KW_NAME,
+        KW_RETURN,
 
         TY_U8,
         TY_U16,

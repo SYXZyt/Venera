@@ -8,10 +8,11 @@
 #include <venera/FileTracker.h>
 #include <venera/Error.h>
 #include <venera/Lexing/Tokeniser.h>
+#include <venera/Parsing/Parser.h>
 
 std::string gInput = R"(
 PROGRAM DO
-    DEF I32 Main() DO
+    DEF I32 Main DO
         RETURN 0
     END
 END
@@ -33,6 +34,17 @@ int main(int, char**)
 
     for (const Venera::Lexing::Token& t : lexer.GetTokens())
         std::println("{}", t);
+
+    Venera::Parsing::Parser parser(lexer.GetTokens());
+    std::shared_ptr<Venera::Parsing::Program> program = parser.Parse();
+
+    if (Venera::Error::Failed() || !program)
+    {
+        Venera::Error::ReportFailedFile();
+        return 2;
+    }
+
+    program->Dump(0);
 
     return 0;
 }

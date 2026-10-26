@@ -1,0 +1,8 @@
+#pragma once
+#include <venera/Parsing/Statement.h>
+#include <venera/Parsing/Expression.h>
+#include <venera/Parsing/Ast/Block.h>
+#include <venera/Parsing/Ast/FunctionDefinition.h>
+#include <venera/Parsing/Ast/Integer.h>
+#include <venera/Parsing/Ast/Program.h>
+#include <venera/Parsing/Ast/Return.h>
