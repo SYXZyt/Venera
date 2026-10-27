@@ -12,7 +12,7 @@ HEADER = ROOT / "src" / "venera" / "ErrorCode.h"
 SOURCE = ROOT / "src" / "venera" / "ErrorCode.cpp"
 
 ENUM_RE = re.compile(r"enum\s+class\s+ErrorCode\b[^{]*\{(.*?)\}", re.DOTALL)
-ENTRY_RE = re.compile(r"\b(E\d{4})_\w+")
+ENTRY_RE = re.compile(r"\b([EWT]\d{4})_\w+")
 
 
 def parse_codes(header: str) -> list[tuple[str, str]]:

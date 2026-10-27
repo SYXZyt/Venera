@@ -9,6 +9,7 @@
 #include <venera/Error.h>
 #include <venera/Lexing/Tokeniser.h>
 #include <venera/Parsing/Parser.h>
+#include <venera/Analysis/Analyser.h>
 
 #include <llvm/IR/LLVMContext.h>
 #include <llvm/IR/Module.h>
@@ -49,6 +50,13 @@ int main(int, char**)
     }
 
     program->Dump(0);
+
+    Venera::Analysis::Analyser analyser(program);
+    analyser.Analyse();
+
+    Venera::Error::ReportFailedFile();
+    if (Venera::Error::Failed())
+        return 3;
 
     llvm::LLVMContext context;
     llvm::Module module("venera", context);

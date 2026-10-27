@@ -130,13 +130,13 @@ bool Venera::Parsing::Parser::ParseFunctionSig(Lexing::Token& outName, LanguageT
 std::tuple<std::string, bool, bool> Venera::Parsing::Parser::SplitIntegerSuffix(const std::string& lexeme)
 {
     if (lexeme.ends_with("ul") || lexeme.ends_with("lu"))
-        return { SubstringFromEnd(lexeme, 2), true, true };
+        return { lexeme.substr(0, lexeme.size() - 2), true, true };
 
     if (lexeme.ends_with("u"))
-        return { SubstringFromEnd(lexeme, 1), true, false };
+        return { lexeme.substr(0, lexeme.size() - 1), true, false };
 
     if (lexeme.ends_with("l"))
-        return { SubstringFromEnd(lexeme, 1), false, true };
+        return { lexeme.substr(0, lexeme.size() - 1), false, true };
 
     return { lexeme, false, false };
 }
@@ -256,8 +256,9 @@ std::shared_ptr<Venera::Parsing::Statement> Venera::Parsing::Parser::ParseStatem
 {
     if (Accept(Lexing::TokenType::KW_RETURN))
     {
+        Lexing::Token returnToken = Last();
         std::shared_ptr returnValue = ParseExpression();
-        return std::make_shared<Return>(returnValue, Last());
+        return std::make_shared<Return>(returnValue, returnToken);
     }
     else if (Check(Lexing::TokenType::KW_DO))
     {

@@ -30,6 +30,13 @@ namespace Venera
         E2007_EXPECTED_TYPE,
         E2008_EXPECTED_IDENTIFIER,
         E2009_EXPECTED_END,
+
+        E3000_MAIN_NOT_I32,
+        E3001_FUNCTION_NO_RETURN,
+        E3002_RETURN_TYPE_MISMATCH,
+        E3003_NO_MAIN,
+
+        W3000_DEAD_CODE,
     };
 
     extern const char* ToString(ErrorCode code);
