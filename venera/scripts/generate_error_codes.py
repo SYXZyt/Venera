@@ -50,7 +50,7 @@ def generate(entries: list[tuple[str, str]]) -> str:
         '        default: return "UNKNOWN";',
         "    }",
         "}",
-        "",
+
     ]
     return "\n".join(lines)
 
