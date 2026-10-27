@@ -29,6 +29,8 @@ namespace Venera::CodeGeneration
     public:
         void Generate();
 
+        bool EmitObject(const std::string& path);
+
         IRGenerator(std::shared_ptr<Parsing::Program> ast);
     };
 }

@@ -2,6 +2,13 @@
 #include <venera/Error.h>
 #include <venera/FileTracker.h>
 #include <llvm/IR/Verifier.h>
+#include <llvm/Target/TargetMachine.h>
+#include <llvm/Target/TargetOptions.h>
+#include <llvm/TargetParser/Host.h>
+#include <llvm/Support/TargetSelect.h>
+#include <llvm/Support/FileSystem.h>
+#include <llvm/IR/LegacyPassManager.h>
+#include <llvm/MC/TargetRegistry.h>
 
 llvm::Type* Venera::CodeGeneration::IRGenerator::MapType(const LanguageType& type) const
 {
@@ -87,7 +94,9 @@ llvm::Function* Venera::CodeGeneration::IRGenerator::GenerateFunction(const std:
     std::vector<llvm::Type*> paramTypes;
 
     llvm::FunctionType* fnType = llvm::FunctionType::get(MapType(func->ReturnType()), paramTypes, false);
-    llvm::Function* fn = llvm::Function::Create(fnType, llvm::Function::ExternalLinkage, func->Name().lexeme, mModule.get());
+    // The C runtime calls 'main', so the language's 'Main' is emitted under that symbol
+    std::string symbolName = func->Name().lexeme == "Main" ? "main" : std::string(func->Name().lexeme);
+    llvm::Function* fn = llvm::Function::Create(fnType, llvm::Function::ExternalLinkage, symbolName, mModule.get());
 
     mCurrentFunction = fn;
 
@@ -125,6 +134,47 @@ void Venera::CodeGeneration::IRGenerator::Generate()
             FileTracker::AddError(stmt->Token().file);
         }
     }
+}
+
+bool Venera::CodeGeneration::IRGenerator::EmitObject(const std::string& path)
+{
+    llvm::InitializeNativeTarget();
+    llvm::InitializeNativeTargetAsmPrinter();
+
+    llvm::Triple triple(llvm::sys::getDefaultTargetTriple());
+    mModule->setTargetTriple(triple);
+
+    std::string error;
+    const llvm::Target* target = llvm::TargetRegistry::lookupTarget(triple, error);
+    if (!target)
+    {
+        llvm::errs() << error << "\n";
+        return false;
+    }
+
+    llvm::TargetOptions options;
+    std::unique_ptr<llvm::TargetMachine> machine(target->createTargetMachine(triple, "generic", "", options, llvm::Reloc::PIC_));
+
+    mModule->setDataLayout(machine->createDataLayout());
+
+    std::error_code ec;
+    llvm::raw_fd_ostream out(path, ec, llvm::sys::fs::OF_None);
+    if (ec)
+    {
+        llvm::errs() << "Could not open file: " << ec.message() << "\n";
+        return false;
+    }
+
+    llvm::legacy::PassManager pass;
+    if (machine->addPassesToEmitFile(pass, out, nullptr, llvm::CodeGenFileType::ObjectFile))
+    {
+        llvm::errs() << "Target can't emit an object file\n";
+        return false;
+    }
+
+    pass.run(*mModule);
+    out.flush();
+    return true;
 }
 
 Venera::CodeGeneration::IRGenerator::IRGenerator(std::shared_ptr<Parsing::Program> ast) :

@@ -11,11 +11,12 @@
 #include <venera/Parsing/Parser.h>
 #include <venera/Analysis/Analyser.h>
 #include <venera/CodeGeneration/IRGenerator.h>
+#include <venera/Linker.h>
 
 std::string gInput = R"(
 PROGRAM DO
     DEF I32 Main DO
-        RETURN 0
+        RETURN 14
     END
 END
 )";
@@ -59,6 +60,12 @@ int main(int, char**)
 
     Venera::CodeGeneration::IRGenerator irGen(program);
     irGen.Generate();
+
+    if (!irGen.EmitObject("prog.o") || !Venera::Linker::Link("prog.o", "prog"))
+    {
+        Venera::Error::ReportFailedFile();
+        return 4;
+    }
 
     Venera::Error::ReportFailedFile();
     return 0;

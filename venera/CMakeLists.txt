@@ -46,6 +46,8 @@ add_executable(venera main.cpp
         src/venera/Analysis/Analyser.cpp
         src/venera/CodeGeneration/IRGenerator.h
         src/venera/CodeGeneration/IRGenerator.cpp
+        src/venera/Linker.h
+        src/venera/Linker.cpp
  )
 
 target_include_directories(venera PUBLIC src)
