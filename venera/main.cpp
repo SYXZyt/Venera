@@ -12,6 +12,7 @@
 #include <venera/Analysis/Analyser.h>
 #include <venera/CodeGeneration/IRGenerator.h>
 #include <venera/Linker.h>
+#include <venera/ANSI.h>
 
 std::string gInput = R"(
 PROGRAM DO
@@ -61,15 +62,19 @@ int main(int, char**)
     Venera::CodeGeneration::IRGenerator irGen(program);
     irGen.Generate();
 
-    if (!irGen.EmitObject("prog.o") || !Venera::Linker::Link("prog.o", "prog"
+    std::string outputPath = "prog"
 #ifdef _WIN32
         ".exe"
 #endif
-    ))
+    ;
+
+    if (!irGen.EmitObject("prog.o") || !Venera::Linker::Link("prog.o", outputPath))
     {
         Venera::Error::ReportFailedFile();
         return 4;
     }
+
+    std::println("{}Built {}{}", Venera::ANSI::Colours::Green, outputPath, Venera::ANSI::Reset());
 
     Venera::Error::ReportFailedFile();
     return 0;
