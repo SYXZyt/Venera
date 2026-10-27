@@ -8,6 +8,19 @@ find_package(LLVM REQUIRED CONFIG)
 message(STATUS "Found LLVM ${LLVM_PACKAGE_VERSION}")
 message(STATUS "Using LLVMConfig.cmake in: ${LLVM_DIR}")
 
+if(TARGET LLVMDebugInfoPDB AND DEFINED ENV{VSINSTALLDIR})
+    get_target_property(_venera_pdb_libs LLVMDebugInfoPDB INTERFACE_LINK_LIBRARIES)
+    if(_venera_pdb_libs MATCHES "diaguids\\.lib")
+        file(TO_CMAKE_PATH "$ENV{VSINSTALLDIR}" _venera_vsdir)
+        set(_venera_diaguids "${_venera_vsdir}/DIA SDK/lib/amd64/diaguids.lib")
+        string(REGEX REPLACE
+            "[A-Za-z]:/Program Files[^;]*/DIA SDK/lib/amd64/diaguids\\.lib"
+            "${_venera_diaguids}"
+            _venera_pdb_libs "${_venera_pdb_libs}")
+        set_target_properties(LLVMDebugInfoPDB PROPERTIES INTERFACE_LINK_LIBRARIES "${_venera_pdb_libs}")
+    endif()
+endif()
+
 add_executable(venera main.cpp
         src/venera/Type.h
         src/venera/Lexing/TokenType.h
@@ -59,6 +72,6 @@ target_compile_definitions(venera PRIVATE ${LLVM_DEFINITIONS_LIST})
 if(LLVM_LINK_LLVM_DYLIB)
     set(LLVM_LIBS LLVM)
 else()
-    llvm_map_components_to_libnames(LLVM_LIBS core)
+    llvm_map_components_to_libnames(LLVM_LIBS core native)
 endif()
 target_link_libraries(venera PRIVATE ${LLVM_LIBS})
