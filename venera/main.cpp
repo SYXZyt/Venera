@@ -61,7 +61,11 @@ int main(int, char**)
     Venera::CodeGeneration::IRGenerator irGen(program);
     irGen.Generate();
 
-    if (!irGen.EmitObject("prog.o") || !Venera::Linker::Link("prog.o", "prog"))
+    if (!irGen.EmitObject("prog.o") || !Venera::Linker::Link("prog.o", "prog"
+#ifdef _WIN32
+        ".exe"
+#endif
+    ))
     {
         Venera::Error::ReportFailedFile();
         return 4;
