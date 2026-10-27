@@ -36,6 +36,7 @@ namespace Venera
         E3002_RETURN_TYPE_MISMATCH,
         E3003_NO_MAIN,
         E3004_LITERAL_DOES_NOT_FIT,
+        E3005_CANNOT_CALL_MAIN,
 
         W3000_DEAD_CODE,
     };

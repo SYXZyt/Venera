@@ -89,6 +89,13 @@ void Venera::Analysis::Analyser::Analyse()
         if (!function)
             continue;
 
+        if (function->Name().lexeme == "main")
+        {
+            Error::Report("Function cannot have the name 'main'", function->Token(), ErrorCode::E3005_CANNOT_CALL_MAIN);
+            FileTracker::AddError(function->Token().file);
+            continue;
+        }
+
         if (function->Name().lexeme == "Main")
             main = function;
 

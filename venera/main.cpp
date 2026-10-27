@@ -24,6 +24,8 @@ PROGRAM DO
         RETURN 0
     END
 
+    DEF I32 main DO RETURN 0 END
+
     DEF I32 Main DO
         RETURN 1
     END
