@@ -30,5 +30,7 @@ namespace Venera
         uint8 ptr = 0;
 
         std::string ToString() const;
+
+        bool IsUnsigned() const;
     };
 }

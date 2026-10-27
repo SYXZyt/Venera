@@ -1,5 +1,6 @@
 #include "LanguageType.h"
 #include <sstream>
+#include <venera/Helpers.h>
 
 bool Venera::LanguageType::operator==(const LanguageType& other) const
 {
@@ -61,5 +62,24 @@ std::string Venera::LanguageType::ToString() const
         }
     }
 
+    int p = ptr;
+    while (p > 0)
+    {
+        ss << "PTR";
+
+        if (p > 1)
+            ss << ' ';
+
+        --p;
+    }
+
     return ss.str();
+}
+
+bool Venera::LanguageType::IsUnsigned() const
+{
+    if (kind == LanguageTypeKind::PRIMITIVE)
+        return IsOneOf(primitiveType, Lexing::TokenType::TY_U8, Lexing::TokenType::TY_U16, Lexing::TokenType::TY_U32, Lexing::TokenType::TY_U64);
+
+    return false;
 }

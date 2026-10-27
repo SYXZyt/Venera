@@ -25,9 +25,28 @@ add_executable(venera main.cpp
         src/venera/ErrorCode.cpp
         src/venera/Error.cpp
         src/venera/Lexing/Tokeniser.cpp
- "src/venera/Parsing/Statement.h" "src/venera/Parsing/Ast/Program.h" "src/venera/Parsing/Ast/Program.cpp" "src/venera/Parsing/Expression.h" "src/venera/Parsing/Ast/FunctionDefinition.h" "src/venera/Parsing/Ast/Block.h" "src/venera/Parsing/Ast/Block.cpp" "src/venera/LanguageType.h" "src/venera/LanguageType.cpp" "src/venera/Parsing/Ast/FunctionDefinition.cpp" "src/venera/Parsing/Ast/Integer.h" "src/venera/Parsing/Ast/Integer.cpp" "src/venera/Parsing/Ast/Return.h" "src/venera/Parsing/Ast/Return.cpp" "src/venera/Parsing/Ast.h" "src/venera/Parsing/Parser.h" "src/venera/Parsing/Parser.cpp"
- src/venera/Analysis/Analyser.h
- src/venera/Analysis/Analyser.cpp)
+        src/venera/Parsing/Statement.h
+        src/venera/Parsing/Ast/Program.h
+        src/venera/Parsing/Ast/Program.cpp
+        src/venera/Parsing/Expression.h
+        src/venera/Parsing/Ast/FunctionDefinition.h
+        src/venera/Parsing/Ast/Block.h
+        src/venera/Parsing/Ast/Block.cpp
+        src/venera/LanguageType.h
+        src/venera/LanguageType.cpp
+        src/venera/Parsing/Ast/FunctionDefinition.cpp
+        src/venera/Parsing/Ast/Integer.h
+        src/venera/Parsing/Ast/Integer.cpp
+        src/venera/Parsing/Ast/Return.h
+        src/venera/Parsing/Ast/Return.cpp
+        src/venera/Parsing/Ast.h
+        src/venera/Parsing/Parser.h
+        src/venera/Parsing/Parser.cpp
+        src/venera/Analysis/Analyser.h
+        src/venera/Analysis/Analyser.cpp
+        src/venera/CodeGeneration/IRGenerator.h
+        src/venera/CodeGeneration/IRGenerator.cpp
+ )
 
 target_include_directories(venera PUBLIC src)
 target_include_directories(venera PRIVATE ${LLVM_INCLUDE_DIRS})
