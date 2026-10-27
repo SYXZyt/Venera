@@ -27,6 +27,9 @@ llvm::Type* Venera::CodeGeneration::IRGenerator::MapType(const LanguageType& typ
                 case Lexing::TokenType::TY_I16: return mBuilder->getInt16Ty();
                 case Lexing::TokenType::TY_I32: return mBuilder->getInt32Ty();
                 case Lexing::TokenType::TY_I64: return mBuilder->getInt64Ty();
+
+                case Lexing::TokenType::TY_F32: return mBuilder->getFloatTy();
+                case Lexing::TokenType::TY_F64: return mBuilder->getDoubleTy();
             }
 
             break;
@@ -42,11 +45,21 @@ llvm::Constant* Venera::CodeGeneration::IRGenerator::GenerateInteger(const std::
     return llvm::ConstantInt::get(type, integer->Value(), !integer->ResolveType().IsUnsigned());
 }
 
+llvm::Constant* Venera::CodeGeneration::IRGenerator::GenerateFloat(const std::shared_ptr<Parsing::Floating>& floating)
+{
+    llvm::Type* type = MapType(floating->ResolveType());
+    return llvm::ConstantFP::get(type, floating->Value());
+}
+
 llvm::Value* Venera::CodeGeneration::IRGenerator::GenerateExpression(const std::shared_ptr<Parsing::Expression>& expr)
 {
     if (std::shared_ptr integer = std::dynamic_pointer_cast<Parsing::Integer>(expr))
     {
         return GenerateInteger(integer);
+    }
+    else if (std::shared_ptr floating = std::dynamic_pointer_cast<Parsing::Floating>(expr))
+    {
+        return GenerateFloat(floating);
     }
     else
     {
@@ -118,6 +131,11 @@ llvm::Function* Venera::CodeGeneration::IRGenerator::GenerateFunction(const std:
     }
 
     return fn;
+}
+
+void Venera::CodeGeneration::IRGenerator::PrintIR() const
+{
+    mModule->print(llvm::outs(), nullptr);
 }
 
 void Venera::CodeGeneration::IRGenerator::Generate()

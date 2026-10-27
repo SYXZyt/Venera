@@ -19,6 +19,7 @@ namespace Venera::CodeGeneration
         llvm::Type* MapType(const LanguageType& type) const;
 
         llvm::Constant* GenerateInteger(const std::shared_ptr<Parsing::Integer>& integer);
+        llvm::Constant* GenerateFloat(const std::shared_ptr<Parsing::Floating>& floating);
         llvm::Value* GenerateExpression(const std::shared_ptr<Parsing::Expression>& expr);
 
         void GenerateStatement(const std::shared_ptr<Parsing::Statement>& stmt);
@@ -27,6 +28,8 @@ namespace Venera::CodeGeneration
         llvm::Function* GenerateFunction(const std::shared_ptr<Parsing::FunctionDefinition>& func);
 
     public:
+        void PrintIR() const;
+
         void Generate();
 
         bool EmitObject(const std::string& path);

@@ -18,6 +18,8 @@ Venera::LanguageType Venera::LanguageType::Int32 = { .kind = LanguageTypeKind::P
 Venera::LanguageType Venera::LanguageType::Int64 = { .kind = LanguageTypeKind::PRIMITIVE, .primitiveType = TokenType::TY_I64 };
 Venera::LanguageType Venera::LanguageType::UInt32 = { .kind = LanguageTypeKind::PRIMITIVE, .primitiveType = TokenType::TY_U32 };
 Venera::LanguageType Venera::LanguageType::UInt64 = { .kind = LanguageTypeKind::PRIMITIVE, .primitiveType = TokenType::TY_U64 };
+Venera::LanguageType Venera::LanguageType::Float32 = { .kind = LanguageTypeKind::PRIMITIVE, .primitiveType = TokenType::TY_F32 };
+Venera::LanguageType Venera::LanguageType::Float64 = { .kind = LanguageTypeKind::PRIMITIVE, .primitiveType = TokenType::TY_F64 };
 
 std::string Venera::LanguageType::ToString() const
 {
@@ -53,6 +55,12 @@ std::string Venera::LanguageType::ToString() const
                 case TokenType::TY_I64:
                     ss << "I64";
                     break;
+                case TokenType::TY_F32:
+                    ss << "F32";
+                    break;
+                case TokenType::TY_F64:
+                    ss << "F64";
+                    break;
                 default:
                     ss << "UNKNOWN";
                     break;
@@ -82,6 +90,22 @@ bool Venera::LanguageType::IsUnsigned() const
         return IsOneOf(primitiveType, Lexing::TokenType::TY_U8, Lexing::TokenType::TY_U16, Lexing::TokenType::TY_U32, Lexing::TokenType::TY_U64);
 
     return false;
+}
+
+bool Venera::LanguageType::IsNumeric() const
+{
+    if (kind != LanguageTypeKind::PRIMITIVE)
+        return false;
+
+    return IsOneOf(primitiveType,
+        TokenType::TY_U8, TokenType::TY_U16, TokenType::TY_U32, TokenType::TY_U64,
+        TokenType::TY_I8, TokenType::TY_I16, TokenType::TY_I32, TokenType::TY_I64,
+        TokenType::TY_F32, TokenType::TY_F64);
+}
+
+bool Venera::LanguageType::CanCoerce(const LanguageType& a, const LanguageType& b)
+{
+    return a.IsNumeric() && b.IsNumeric();
 }
 
 bool Venera::LanguageType::FitsUnsignedValue(uint64 value) const

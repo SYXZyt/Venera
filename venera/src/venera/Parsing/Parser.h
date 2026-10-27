@@ -55,6 +55,7 @@ namespace Venera::Parsing
         std::tuple<std::string /* digits */, bool /* isUnsigned */, bool /* isForced64 */ > SplitIntegerSuffix(const std::string& lexeme);
 
         std::shared_ptr<Integer> ParseBase10();
+        std::shared_ptr<Floating> ParseFloating();
 
         std::shared_ptr<Expression> ParsePrimary();
         std::shared_ptr<Expression> ParseExpression();

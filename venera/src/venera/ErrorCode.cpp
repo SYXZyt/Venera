@@ -21,7 +21,7 @@ const char* Venera::ToString(ErrorCode code)
         case ErrorCode::E2003_EXPECTED_BLOCK: return "E2003";
         case ErrorCode::E2004_EXPECTED_STATEMENT: return "E2004";
         case ErrorCode::E2005_EXPECTED_EXPRESSION: return "E2005";
-        case ErrorCode::E2006_INTEGER_LITERAL_OUT_OF_RANGE: return "E2006";
+        case ErrorCode::E2006_LITERAL_OUT_OF_RANGE: return "E2006";
         case ErrorCode::E2007_EXPECTED_TYPE: return "E2007";
         case ErrorCode::E2008_EXPECTED_IDENTIFIER: return "E2008";
         case ErrorCode::E2009_EXPECTED_END: return "E2009";

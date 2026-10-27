@@ -21,7 +21,7 @@ namespace Venera
     extern std::string SubstringFromEnd(const std::string& string, size_t offset);
 
     template <typename T>
-    inline bool TryParseInt(std::string_view string, T& result)
+    inline bool TryParse(std::string_view string, T& result)
     {
         auto [ptr, error] = std::from_chars(string.data(), string.data() + string.size(), result);
         return error == std::errc() && ptr == string.data() + string.size();

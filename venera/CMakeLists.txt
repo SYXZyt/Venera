@@ -61,7 +61,7 @@ add_executable(venera main.cpp
         src/venera/CodeGeneration/IRGenerator.cpp
         src/venera/Linker.h
         src/venera/Linker.cpp
- )
+  "src/venera/Parsing/Ast/Floating.h" "src/venera/Parsing/Ast/Floating.cpp")
 
 target_include_directories(venera PUBLIC src)
 target_include_directories(venera SYSTEM PRIVATE ${LLVM_INCLUDE_DIRS})

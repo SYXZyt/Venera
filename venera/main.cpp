@@ -16,8 +16,16 @@
 
 std::string gInput = R"(
 PROGRAM DO
+    DEF F32 FloatTest DO
+        RETURN 1.f
+    END
+
+    DEF U8 IntTest DO
+        RETURN 0
+    END
+
     DEF I32 Main DO
-        RETURN 2147483648
+        RETURN 1
     END
 END
 )";
@@ -62,6 +70,12 @@ int main(int, char**)
     Venera::CodeGeneration::IRGenerator irGen(program);
     irGen.Generate();
 
+    if (Venera::Error::Failed())
+    {
+        Venera::Error::ReportFailedFile();
+        return 4;
+    }
+
     std::string outputPath = "prog"
 #ifdef _WIN32
         ".exe"
@@ -71,8 +85,10 @@ int main(int, char**)
     if (!irGen.EmitObject("prog.o") || !Venera::Linker::Link("prog.o", outputPath))
     {
         Venera::Error::ReportFailedFile();
-        return 4;
+        return 5;
     }
+
+    irGen.PrintIR();
 
     std::println("{}Built {}{}", Venera::ANSI::Colours::Green, outputPath, Venera::ANSI::Reset());
 

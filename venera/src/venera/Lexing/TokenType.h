@@ -28,6 +28,9 @@ namespace Venera::Lexing
         TY_I32,
         TY_I64,
 
+        TY_F32,
+        TY_F64,
+
         LIT_BASE10,
         LIT_FLOATING,
     };

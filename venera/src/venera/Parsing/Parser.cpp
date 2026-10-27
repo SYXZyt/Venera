@@ -104,6 +104,9 @@ bool Venera::Parsing::Parser::CheckType()
         case Lexing::TokenType::TY_I16:
         case Lexing::TokenType::TY_I32:
         case Lexing::TokenType::TY_I64:
+
+        case Lexing::TokenType::TY_F32:
+        case Lexing::TokenType::TY_F64:
             return true;
 
         default:
@@ -147,9 +150,9 @@ std::shared_ptr<Venera::Parsing::Integer> Venera::Parsing::Parser::ParseBase10()
     auto [digits, isUnsigned, isLong] = SplitIntegerSuffix(token.lexeme);
 
     uint64 raw;
-    if (!TryParseInt(digits, raw))
+    if (!TryParse(digits, raw))
     {
-        Error::Report(std::format("Integer literal '{}' is out of range", token.lexeme), token, ErrorCode::E2006_INTEGER_LITERAL_OUT_OF_RANGE);
+        Error::Report(std::format("Integer literal '{}' is out of range", token.lexeme), token, ErrorCode::E2006_LITERAL_OUT_OF_RANGE);
         FileTracker::AddError(token.file);
         Sync();
 
@@ -164,7 +167,7 @@ std::shared_ptr<Venera::Parsing::Integer> Venera::Parsing::Parser::ParseBase10()
 
     if (raw > INT64_MAX)
     {
-        Error::Report(std::format("Integer literal '{}' is out of range", token.lexeme), token, ErrorCode::E2006_INTEGER_LITERAL_OUT_OF_RANGE);
+        Error::Report(std::format("Integer literal '{}' is out of range", token.lexeme), token, ErrorCode::E2006_LITERAL_OUT_OF_RANGE);
         FileTracker::AddError(token.file);
         Sync();
 
@@ -175,10 +178,32 @@ std::shared_ptr<Venera::Parsing::Integer> Venera::Parsing::Parser::ParseBase10()
     return std::make_shared<Integer>(token, (int64)raw, type);
 }
 
+std::shared_ptr<Venera::Parsing::Floating> Venera::Parsing::Parser::ParseFloating()
+{
+    Lexing::Token token = Last();
+    bool isFloat = token.lexeme.ends_with('f');
+    if (isFloat)
+        token.lexeme = token.lexeme.substr(0, token.lexeme.size() - 1);
+
+    double raw;
+    if (!TryParse(token.lexeme, raw))
+    {
+        Error::Report(std::format("Floating point literal '{}' is out of range", token.lexeme), token, ErrorCode::E2006_LITERAL_OUT_OF_RANGE);
+        FileTracker::AddError(token.file);
+        Sync();
+
+        return nullptr;
+    }
+
+    return std::make_shared<Floating>(token, raw, isFloat ? LanguageType::Float32 : LanguageType::Float64);
+}
+
 std::shared_ptr<Venera::Parsing::Expression> Venera::Parsing::Parser::ParsePrimary()
 {
     if (Accept(Lexing::TokenType::LIT_BASE10))
         return ParseBase10();
+    else if (Accept(Lexing::TokenType::LIT_FLOATING))
+        return ParseFloating();
 
     Error::Report("Expected expression", Current(), ErrorCode::E2005_EXPECTED_EXPRESSION);
     FileTracker::AddError(Current().file);

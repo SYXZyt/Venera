@@ -30,6 +30,9 @@ namespace Venera::Lexing
             { "I16", TokenType::TY_I16 },
             { "I32", TokenType::TY_I32 },
             { "I64", TokenType::TY_I64 },
+
+            { "F32", TokenType::TY_F32 },
+            { "F64", TokenType::TY_F64 },
         };
 
         std::vector<Token> mTokens;
