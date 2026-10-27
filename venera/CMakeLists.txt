@@ -64,7 +64,11 @@ add_executable(venera main.cpp
  )
 
 target_include_directories(venera PUBLIC src)
-target_include_directories(venera PRIVATE ${LLVM_INCLUDE_DIRS})
+target_include_directories(venera SYSTEM PRIVATE ${LLVM_INCLUDE_DIRS})
+
+if(MSVC)
+    target_compile_options(venera PRIVATE /external:W0)
+endif()
 
 separate_arguments(LLVM_DEFINITIONS_LIST NATIVE_COMMAND ${LLVM_DEFINITIONS})
 target_compile_definitions(venera PRIVATE ${LLVM_DEFINITIONS_LIST})

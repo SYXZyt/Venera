@@ -35,6 +35,7 @@ namespace Venera
         E3001_FUNCTION_NO_RETURN,
         E3002_RETURN_TYPE_MISMATCH,
         E3003_NO_MAIN,
+        E3004_LITERAL_DOES_NOT_FIT,
 
         W3000_DEAD_CODE,
     };

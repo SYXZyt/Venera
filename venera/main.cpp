@@ -17,7 +17,7 @@
 std::string gInput = R"(
 PROGRAM DO
     DEF I32 Main DO
-        RETURN 14
+        RETURN 2147483648
     END
 END
 )";

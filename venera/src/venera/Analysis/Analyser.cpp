@@ -43,16 +43,38 @@ bool Venera::Analysis::Analyser::AnalyseBlock(std::shared_ptr<Parsing::Block> bl
     return returns;
 }
 
+bool Venera::Analysis::Analyser::TryCoerceLiteral(const std::shared_ptr<Parsing::Expression>& value, const LanguageType& expected)
+{
+    std::shared_ptr literal = std::dynamic_pointer_cast<Parsing::Integer>(value);
+    if (!literal)
+        return false;
+
+    if (!expected.FitsUnsignedValue((uint64)literal->Value()))
+    {
+        Error::Report(std::format("Literal '{}' does not fit in {}", literal->Value(), expected.ToString()), value->Token(), ErrorCode::E3004_LITERAL_DOES_NOT_FIT);
+        FileTracker::AddError(value->Token().file);
+        return true;
+    }
+
+    literal->SetType(expected);
+    return true;
+}
+
 void Venera::Analysis::Analyser::AnalyseReturn(std::shared_ptr<Parsing::Return> ret)
 {
     std::shared_ptr<Parsing::Expression> value = ret->ReturnValue();
     if (!value)
         return;
 
+    const LanguageType& expected = mCurrentFunction->ReturnType();
+
+    if (TryCoerceLiteral(value, expected))
+        return;
+
     LanguageType type = value->ResolveType();
-    if (type != mCurrentFunction->ReturnType())
+    if (type != expected)
     {
-        Error::Report(std::format("Function '{}' returns {} but the return value is {}", mCurrentFunction->Name().lexeme, mCurrentFunction->ReturnType().ToString(), type.ToString()), value->Token(), ErrorCode::E3002_RETURN_TYPE_MISMATCH);
+        Error::Report(std::format("Function '{}' returns {} but the return value is {}", mCurrentFunction->Name().lexeme, expected.ToString(), type.ToString()), value->Token(), ErrorCode::E3002_RETURN_TYPE_MISMATCH);
         FileTracker::AddError(value->Token().file);
     }
 }

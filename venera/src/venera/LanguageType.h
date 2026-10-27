@@ -32,5 +32,7 @@ namespace Venera
         std::string ToString() const;
 
         bool IsUnsigned() const;
+
+        bool FitsUnsignedValue(uint64 value) const;
     };
 }

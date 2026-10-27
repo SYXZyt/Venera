@@ -171,7 +171,7 @@ std::shared_ptr<Venera::Parsing::Integer> Venera::Parsing::Parser::ParseBase10()
         return nullptr;
     }
 
-    LanguageType type = isLong || raw > UINT32_MAX ? LanguageType::Int64 : LanguageType::Int32;
+    LanguageType type = isLong || raw > INT32_MAX ? LanguageType::Int64 : LanguageType::Int32;
     return std::make_shared<Integer>(token, (int64)raw, type);
 }
 

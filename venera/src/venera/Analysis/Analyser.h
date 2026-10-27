@@ -14,6 +14,8 @@ namespace Venera::Analysis
         bool AnalyseBlock(std::shared_ptr<Parsing::Block> block);
         void AnalyseReturn(std::shared_ptr<Parsing::Return> ret);
 
+        bool TryCoerceLiteral(const std::shared_ptr<Parsing::Expression>& value, const LanguageType& expected);
+
     public:
         void Analyse();
 

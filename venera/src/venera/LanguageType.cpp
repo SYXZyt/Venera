@@ -83,3 +83,24 @@ bool Venera::LanguageType::IsUnsigned() const
 
     return false;
 }
+
+bool Venera::LanguageType::FitsUnsignedValue(uint64 value) const
+{
+    if (kind != LanguageTypeKind::PRIMITIVE)
+        return false;
+
+    switch (primitiveType)
+    {
+        case TokenType::TY_U8: return value <= UINT8_MAX;
+        case TokenType::TY_U16: return value <= UINT16_MAX;
+        case TokenType::TY_U32: return value <= UINT32_MAX;
+        case TokenType::TY_U64: return true;
+
+        case TokenType::TY_I8: return value <= INT8_MAX;
+        case TokenType::TY_I16: return value <= INT16_MAX;
+        case TokenType::TY_I32: return value <= INT32_MAX;
+        case TokenType::TY_I64: return value <= INT64_MAX;
+
+        default: return false;
+    }
+}

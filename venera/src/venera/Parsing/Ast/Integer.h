@@ -20,6 +20,10 @@ namespace Venera::Parsing
             return mType;
         }
 
+        void SetType(LanguageType type) {
+            mType = std::move(type);
+        }
+
         Integer(Lexing::Token token, int64 value, LanguageType type) :
             Expression(std::move(token)),
             mValue(value),
