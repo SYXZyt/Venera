@@ -61,11 +61,55 @@ llvm::Value* Venera::CodeGeneration::IRGenerator::GenerateExpression(const std::
     {
         return GenerateFloat(floating);
     }
+    else if (std::shared_ptr binop = std::dynamic_pointer_cast<Parsing::BinaryOp>(expr))
+    {
+        return GenerateBinaryOperation(binop);
+    }
     else
     {
         Error::Report("No generator for expression", expr->Token(), ErrorCode::E0003_INTERNAL_COMPILER_ERROR);
         FileTracker::AddError(expr->Token().file);
         return nullptr;
+    }
+}
+
+llvm::Value* Venera::CodeGeneration::IRGenerator::GenerateBinaryOperation(const std::shared_ptr<Parsing::BinaryOp>& binop)
+{
+    llvm::Value* lhs = GenerateExpression(binop->Left());
+    llvm::Value* rhs = GenerateExpression(binop->Right());
+
+    if (!lhs || !rhs)
+        return nullptr;
+
+    LanguageType exprType = binop->ResolveType();
+
+    if (exprType == LanguageType::Runtime)
+    {
+        Error::Report("Cannot generate expression", binop->Token(), ErrorCode::E0003_INTERNAL_COMPILER_ERROR);
+        FileTracker::AddError(binop->Token().file);
+        return nullptr;
+    }
+
+    bool isSigned = !exprType.IsUnsigned();
+
+    switch (binop->Operator().type)
+    {
+        case Lexing::TokenType::OP_ADD:
+            return mBuilder->CreateAdd(lhs, rhs, "add");
+
+        case Lexing::TokenType::OP_SUB:
+            return mBuilder->CreateSub(lhs, rhs, "sub");
+
+        case Lexing::TokenType::OP_MUL:
+            return mBuilder->CreateMul(lhs, rhs, "mul");
+
+        case Lexing::TokenType::OP_DIV:
+            return isSigned ? mBuilder->CreateSDiv(lhs, rhs, "div") : mBuilder->CreateUDiv(lhs, rhs, "div");
+
+        default:
+            Error::Report("Unknown operator", binop->Token(), ErrorCode::E0003_INTERNAL_COMPILER_ERROR);
+            FileTracker::AddError(binop->Token().file);
+            return nullptr;
     }
 }
 

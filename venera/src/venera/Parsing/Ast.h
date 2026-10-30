@@ -7,3 +7,4 @@
 #include <venera/Parsing/Ast/Program.h>
 #include <venera/Parsing/Ast/Return.h>
 #include <venera/Parsing/Ast/Floating.h>
+#include <venera/Parsing/Ast/BinaryOp.h>

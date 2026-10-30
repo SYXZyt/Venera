@@ -15,6 +15,10 @@ const char* Venera::Lexing::ToString(TokenType type)
         TOKEN(KW_END);
         TOKEN(KW_NAME);
         TOKEN(KW_RETURN);
+        TOKEN(OP_ADD);
+        TOKEN(OP_SUB);
+        TOKEN(OP_MUL);
+        TOKEN(OP_DIV);
         TOKEN(TY_U8);
         TOKEN(TY_U16);
         TOKEN(TY_U32);

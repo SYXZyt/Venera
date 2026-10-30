@@ -25,11 +25,14 @@ const char* Venera::ToString(ErrorCode code)
         case ErrorCode::E2007_EXPECTED_TYPE: return "E2007";
         case ErrorCode::E2008_EXPECTED_IDENTIFIER: return "E2008";
         case ErrorCode::E2009_EXPECTED_END: return "E2009";
+        case ErrorCode::E2010_EXPECTED_CLOSED_PARENTHESIS: return "E2010";
         case ErrorCode::E3000_MAIN_NOT_I32: return "E3000";
         case ErrorCode::E3001_FUNCTION_NO_RETURN: return "E3001";
         case ErrorCode::E3002_RETURN_TYPE_MISMATCH: return "E3002";
         case ErrorCode::E3003_NO_MAIN: return "E3003";
         case ErrorCode::E3004_LITERAL_DOES_NOT_FIT: return "E3004";
+        case ErrorCode::E3005_CANNOT_CALL_MAIN: return "E3005";
+        case ErrorCode::E3006_INCOMPATIBLE_OPERAND_TYPES: return "E3006";
         case ErrorCode::W3000_DEAD_CODE: return "W3000";
         default: return "UNKNOWN";
     }

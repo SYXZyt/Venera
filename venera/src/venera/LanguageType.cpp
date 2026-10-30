@@ -68,6 +68,15 @@ std::string Venera::LanguageType::ToString() const
 
             break;
         }
+
+        case LanguageTypeKind::FUNCTION:
+            ss << "<function>";
+            break;
+
+        case LanguageTypeKind::INVALID:
+        default:
+            ss << "<unresolved type>";
+            break;
     }
 
     int p = ptr;
@@ -127,4 +136,12 @@ bool Venera::LanguageType::FitsUnsignedValue(uint64 value) const
 
         default: return false;
     }
+}
+
+Venera::LanguageType Venera::LanguageType::CommonNumericType(const LanguageType& a, const LanguageType& b)
+{
+    if (!a.IsNumeric() || !b.IsNumeric() || a != b)
+        return LanguageType::Runtime;
+
+    return a;
 }

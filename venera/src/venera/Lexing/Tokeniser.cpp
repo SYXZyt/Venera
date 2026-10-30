@@ -188,6 +188,22 @@ void Venera::Lexing::Tokeniser::Tokenise()
         {
             mTokens.push_back(std::move(BuildSingleCharToken(TokenType::R_PAREN)));
         }
+        else if (Current() == '+')
+        {
+            mTokens.push_back(std::move(BuildSingleCharToken(TokenType::OP_ADD)));
+        }
+        else if (Current() == '-')
+        {
+            mTokens.push_back(std::move(BuildSingleCharToken(TokenType::OP_SUB)));
+        }
+        else if (Current() == '*')
+        {
+            mTokens.push_back(std::move(BuildSingleCharToken(TokenType::OP_MUL)));
+        }
+        else if (Current() == '/')
+        {
+            mTokens.push_back(std::move(BuildSingleCharToken(TokenType::OP_DIV)));
+        }
         else
         {
             char illegalChar = Current();

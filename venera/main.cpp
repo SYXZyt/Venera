@@ -16,18 +16,12 @@
 
 std::string gInput = R"(
 PROGRAM DO
-    DEF F32 FloatTest DO
-        RETURN 1.f
+    DEF I32 Foo DO
+        RETURN (1 + 2) * 3
     END
-
-    DEF U8 IntTest DO
-        RETURN 0
-    END
-
-    DEF I32 main DO RETURN 0 END
 
     DEF I32 Main DO
-        RETURN 1
+        RETURN 1 + 2 * 3.0
     END
 END
 )";

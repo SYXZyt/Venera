@@ -39,5 +39,7 @@ namespace Venera
         bool IsNumeric() const;
 
         bool FitsUnsignedValue(uint64 value) const;
+
+        static LanguageType CommonNumericType(const LanguageType& a, const LanguageType& b);
     };
 }

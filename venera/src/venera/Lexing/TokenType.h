@@ -18,6 +18,11 @@ namespace Venera::Lexing
         KW_NAME,
         KW_RETURN,
 
+        OP_ADD,
+        OP_SUB,
+        OP_MUL,
+        OP_DIV,
+
         TY_U8,
         TY_U16,
         TY_U32,

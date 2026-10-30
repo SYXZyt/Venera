@@ -58,6 +58,10 @@ namespace Venera::Parsing
         std::shared_ptr<Floating> ParseFloating();
 
         std::shared_ptr<Expression> ParsePrimary();
+        std::shared_ptr<Expression> ParseFactor();
+        std::shared_ptr<Expression> ParseTerm();
+        std::shared_ptr<Expression> ParseArithmetic();
+
         std::shared_ptr<Expression> ParseExpression();
 
         std::optional<LanguageType> ParseType();

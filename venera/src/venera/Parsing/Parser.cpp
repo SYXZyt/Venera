@@ -211,9 +211,61 @@ std::shared_ptr<Venera::Parsing::Expression> Venera::Parsing::Parser::ParsePrima
     return nullptr;
 }
 
+std::shared_ptr<Venera::Parsing::Expression> Venera::Parsing::Parser::ParseFactor()
+{
+    if (Accept(Lexing::TokenType::L_PAREN))
+    {
+        std::shared_ptr expr = ParseExpression();
+        if (!Expect(Lexing::TokenType::R_PAREN, "Expected ')'", ErrorCode::E2010_EXPECTED_CLOSED_PARENTHESIS))
+            return nullptr;
+
+        return expr;
+    }
+
+    return ParsePrimary();
+}
+
+std::shared_ptr<Venera::Parsing::Expression> Venera::Parsing::Parser::ParseTerm()
+{
+    Lexing::Token t = Current();
+    std::shared_ptr left = ParseFactor();
+
+    while (Accept({ Lexing::TokenType::OP_MUL, Lexing::TokenType::OP_DIV }))
+    {
+        Lexing::Token op = Last();
+
+        std::shared_ptr right = ParseFactor();
+        if (!right)
+            return nullptr;
+
+        left = std::make_shared<BinaryOp>(t, left, right, op);
+    }
+
+    return left;
+}
+
+std::shared_ptr<Venera::Parsing::Expression> Venera::Parsing::Parser::ParseArithmetic()
+{
+    Lexing::Token t = Current();
+    std::shared_ptr left = ParseTerm();
+
+    while (Accept({ Lexing::TokenType::OP_ADD, Lexing::TokenType::OP_SUB }))
+    {
+        Lexing::Token op = Last();
+
+        std::shared_ptr right = ParseTerm();
+        if (!right)
+            return nullptr;
+
+        left = std::make_shared<BinaryOp>(t, left, right, op);
+    }
+
+    return left;
+}
+
 std::shared_ptr<Venera::Parsing::Expression> Venera::Parsing::Parser::ParseExpression()
 {
-    return ParsePrimary();
+    return ParseArithmetic();
 }
 
 std::optional<Venera::LanguageType> Venera::Parsing::Parser::ParseType()
@@ -266,7 +318,7 @@ std::shared_ptr<Venera::Parsing::Block> Venera::Parsing::Parser::ParseBlock()
     {
         std::shared_ptr stmt = ParseStatement();
         if (!stmt)
-            break;
+            return nullptr;
 
         statements.push_back(std::move(stmt));
     }
@@ -283,6 +335,9 @@ std::shared_ptr<Venera::Parsing::Statement> Venera::Parsing::Parser::ParseStatem
     {
         Lexing::Token returnToken = Last();
         std::shared_ptr returnValue = ParseExpression();
+        if (!returnValue)
+            return nullptr;
+
         return std::make_shared<Return>(returnValue, returnToken);
     }
     else if (Check(Lexing::TokenType::KW_DO))

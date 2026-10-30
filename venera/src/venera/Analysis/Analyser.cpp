@@ -72,6 +72,9 @@ void Venera::Analysis::Analyser::AnalyseReturn(std::shared_ptr<Parsing::Return> 
         return;
 
     LanguageType type = value->ResolveType();
+    if (type == LanguageType::Runtime)
+        return;
+
     if (type != expected)
     {
         Error::Report(std::format("Function '{}' returns {} but the return value is {}", mCurrentFunction->Name().lexeme, expected.ToString(), type.ToString()), value->Token(), ErrorCode::E3002_RETURN_TYPE_MISMATCH);
