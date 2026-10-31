@@ -39,6 +39,7 @@ namespace Venera
         E3004_LITERAL_DOES_NOT_FIT,
         E3005_CANNOT_CALL_MAIN,
         E3006_INCOMPATIBLE_OPERAND_TYPES,
+        E3007_INVALID_UNARY,
 
         W3000_DEAD_CODE,
     };

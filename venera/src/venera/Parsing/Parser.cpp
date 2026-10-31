@@ -225,16 +225,31 @@ std::shared_ptr<Venera::Parsing::Expression> Venera::Parsing::Parser::ParseFacto
     return ParsePrimary();
 }
 
+std::shared_ptr<Venera::Parsing::Expression> Venera::Parsing::Parser::ParseUnary()
+{
+    if (Accept(Lexing::TokenType::OP_SUB))
+    {
+        Lexing::Token t = Last();
+        std::shared_ptr expr = ParseExpression();
+        if (!expr)
+            return nullptr;
+
+        return std::make_shared<UnaryOp>(t, expr);
+    }
+
+    return ParseFactor();
+}
+
 std::shared_ptr<Venera::Parsing::Expression> Venera::Parsing::Parser::ParseTerm()
 {
     Lexing::Token t = Current();
-    std::shared_ptr left = ParseFactor();
+    std::shared_ptr left = ParseUnary();
 
     while (Accept({ Lexing::TokenType::OP_MUL, Lexing::TokenType::OP_DIV }))
     {
         Lexing::Token op = Last();
 
-        std::shared_ptr right = ParseFactor();
+        std::shared_ptr right = ParseUnary();
         if (!right)
             return nullptr;
 

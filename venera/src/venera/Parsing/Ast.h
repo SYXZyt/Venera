@@ -8,3 +8,4 @@
 #include <venera/Parsing/Ast/Return.h>
 #include <venera/Parsing/Ast/Floating.h>
 #include <venera/Parsing/Ast/BinaryOp.h>
+#include <venera/Parsing/Ast/UnaryOp.h>

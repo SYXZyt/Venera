@@ -65,6 +65,10 @@ llvm::Value* Venera::CodeGeneration::IRGenerator::GenerateExpression(const std::
     {
         return GenerateBinaryOperation(binop);
     }
+    else if (std::shared_ptr unary = std::dynamic_pointer_cast<Parsing::UnaryOp>(expr))
+    {
+        return GenerateUnaryOperation(unary);
+    }
     else
     {
         Error::Report("No generator for expression", expr->Token(), ErrorCode::E0003_INTERNAL_COMPILER_ERROR);
@@ -111,6 +115,22 @@ llvm::Value* Venera::CodeGeneration::IRGenerator::GenerateBinaryOperation(const 
             FileTracker::AddError(binop->Token().file);
             return nullptr;
     }
+}
+
+llvm::Value* Venera::CodeGeneration::IRGenerator::GenerateUnaryOperation(const std::shared_ptr<Parsing::UnaryOp>& unaryop)
+{
+    llvm::Value* expr = GenerateExpression(unaryop->GetExpression());
+    if (!expr)
+        return nullptr;
+
+    if (!unaryop->ResolveType().IsNumeric())
+    {
+        Error::Report("Cannot generate expression", unaryop->Token(), ErrorCode::E0003_INTERNAL_COMPILER_ERROR);
+        FileTracker::AddError(unaryop->Token().file);
+        return nullptr;
+    }
+
+    return mBuilder->CreateNeg(expr, "neg");
 }
 
 void Venera::CodeGeneration::IRGenerator::GenerateStatement(const std::shared_ptr<Parsing::Statement>& stmt)

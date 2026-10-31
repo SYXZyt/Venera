@@ -22,6 +22,7 @@ namespace Venera::CodeGeneration
         llvm::Constant* GenerateFloat(const std::shared_ptr<Parsing::Floating>& floating);
         llvm::Value* GenerateExpression(const std::shared_ptr<Parsing::Expression>& expr);
         llvm::Value* GenerateBinaryOperation(const std::shared_ptr<Parsing::BinaryOp>& binop);
+        llvm::Value* GenerateUnaryOperation(const std::shared_ptr<Parsing::UnaryOp>& unaryop);
 
         void GenerateStatement(const std::shared_ptr<Parsing::Statement>& stmt);
         void GenerateBlock(const std::shared_ptr<Parsing::Block>& block);

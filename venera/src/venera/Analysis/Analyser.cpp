@@ -3,6 +3,51 @@
 #include <venera/FileTracker.h>
 #include <format>
 
+void Venera::Analysis::Analyser::AnalyseExpression(std::shared_ptr<Parsing::Expression> expression)
+{
+    if (std::shared_ptr binary = std::dynamic_pointer_cast<Parsing::BinaryOp>(expression))
+    {
+        AnalyseBinary(binary);
+    }
+    else if (std::shared_ptr unary = std::dynamic_pointer_cast<Parsing::UnaryOp>(expression))
+    {
+        AnalyseUnary(unary);
+    }
+}
+
+void Venera::Analysis::Analyser::AnalyseBinary(std::shared_ptr<Parsing::BinaryOp> binaryop)
+{
+    AnalyseExpression(binaryop->Left());
+    AnalyseExpression(binaryop->Right());
+
+    LanguageType lhs = binaryop->Left()->ResolveType();
+    LanguageType rhs = binaryop->Right()->ResolveType();
+
+    if (lhs == LanguageType::Runtime || rhs == LanguageType::Runtime)
+        return;
+
+    if (binaryop->ResolveType() == LanguageType::Runtime)
+    {
+        Error::Report(std::format("Cannot implicitly combine operand types '{}' and '{}'", lhs.ToString(), rhs.ToString()), binaryop->Operator(), ErrorCode::E3006_INCOMPATIBLE_OPERAND_TYPES);
+        FileTracker::AddError(binaryop->Operator().file);
+    }
+}
+
+void Venera::Analysis::Analyser::AnalyseUnary(std::shared_ptr<Parsing::UnaryOp> unaryop)
+{
+    AnalyseExpression(unaryop->GetExpression());
+
+    LanguageType type = unaryop->GetExpression()->ResolveType();
+    if (type == LanguageType::Runtime)
+        return;
+
+    if (!type.IsNumeric() || type.IsUnsigned())
+    {
+        Error::Report(std::format("Cannot negate a value of type {}", type.ToString()), unaryop->Token(), ErrorCode::E3007_INVALID_UNARY);
+        FileTracker::AddError(unaryop->Token().file);
+    }
+}
+
 void Venera::Analysis::Analyser::AnalyseFunction(std::shared_ptr<Parsing::FunctionDefinition> function)
 {
     mCurrentFunction = function.get();
@@ -65,6 +110,8 @@ void Venera::Analysis::Analyser::AnalyseReturn(std::shared_ptr<Parsing::Return> 
     std::shared_ptr<Parsing::Expression> value = ret->ReturnValue();
     if (!value)
         return;
+
+    AnalyseExpression(value);
 
     const LanguageType& expected = mCurrentFunction->ReturnType();
 

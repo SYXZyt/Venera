@@ -33,6 +33,7 @@ const char* Venera::ToString(ErrorCode code)
         case ErrorCode::E3004_LITERAL_DOES_NOT_FIT: return "E3004";
         case ErrorCode::E3005_CANNOT_CALL_MAIN: return "E3005";
         case ErrorCode::E3006_INCOMPATIBLE_OPERAND_TYPES: return "E3006";
+        case ErrorCode::E3007_INVALID_UNARY: return "E3007";
         case ErrorCode::W3000_DEAD_CODE: return "W3000";
         default: return "UNKNOWN";
     }

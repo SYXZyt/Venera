@@ -17,11 +17,11 @@
 std::string gInput = R"(
 PROGRAM DO
     DEF I32 Foo DO
-        RETURN (1 + 2) * 3
+        RETURN (1 + 2) * 1
     END
 
     DEF I32 Main DO
-        RETURN 1 + 2 * 3.0
+        RETURN (1 + 2) * -1
     END
 END
 )";
@@ -76,7 +76,7 @@ int main(int, char**)
 #ifdef _WIN32
         ".exe"
 #endif
-    ;
+        ;
 
     if (!irGen.EmitObject("prog.o") || !Venera::Linker::Link("prog.o", outputPath))
     {
