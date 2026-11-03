@@ -31,6 +31,18 @@ void Venera::Analysis::Analyser::AnalyseBinary(std::shared_ptr<Parsing::BinaryOp
         Error::Report(std::format("Cannot implicitly combine operand types '{}' and '{}'", lhs.ToString(), rhs.ToString()), binaryop->Operator(), ErrorCode::E3006_INCOMPATIBLE_OPERAND_TYPES);
         FileTracker::AddError(binaryop->Operator().file);
     }
+
+    if (binaryop->ResolveType() == LanguageType::Boolean && !binaryop->IsComparison())
+    {
+        Error::Report("BOOLs do not support arithmetic operations", binaryop->Operator(), ErrorCode::E3008_ARITHMETIC_ON_BOOL);
+        FileTracker::AddError(binaryop->Operator().file);
+    }
+
+    if (binaryop->IsComparison() && binaryop->Left()->ResolveType() != binaryop->Right()->ResolveType())
+    {
+        Error::Report("Failed to compare types", binaryop->Token(), ErrorCode::E3009_CANNOT_COMPARE);
+        FileTracker::AddError(binaryop->Operator().file);
+    }
 }
 
 void Venera::Analysis::Analyser::AnalyseUnary(std::shared_ptr<Parsing::UnaryOp> unaryop)

@@ -112,7 +112,8 @@ Venera::Lexing::Token Venera::Lexing::Tokeniser::BuildNumeric(NumericCharCheck c
         type == TokenType::LIT_BASE10 &&
         Current() == '.' &&
         (IsDigit(Peek()) ||
-            (Peek() == 'f' && !IsIdentifier(Peek(2)))))
+            (Peek() == 'f' && !IsIdentifier(Peek(2))) ||
+            !IsIdentifier(Peek())))
     {
         type = TokenType::LIT_FLOATING;
 
@@ -160,6 +161,21 @@ Venera::Lexing::Token Venera::Lexing::Tokeniser::BuildSingleCharToken(TokenType 
     return token;
 }
 
+Venera::Lexing::Token Venera::Lexing::Tokeniser::BuildTwoCharToken(std::string_view lexeme, TokenType type)
+{
+    Token token
+    {
+        .lexeme = std::string(lexeme),
+        .file = mFile,
+        .line = mLine,
+        .col = mCol,
+        .type = type,
+    };
+
+    Advance(2);
+    return token;
+}
+
 void Venera::Lexing::Tokeniser::Tokenise()
 {
     while (Current() != '\0')
@@ -203,6 +219,28 @@ void Venera::Lexing::Tokeniser::Tokenise()
         else if (Current() == '/')
         {
             mTokens.push_back(std::move(BuildSingleCharToken(TokenType::OP_DIV)));
+        }
+        else if (Current() == '=' && Peek() == '=')
+        {
+            mTokens.push_back(std::move(BuildTwoCharToken("==", TokenType::OP_EQ)));
+        }
+        else if (Current() == '!' && Peek() == '=')
+        {
+            mTokens.push_back(std::move(BuildTwoCharToken("==", TokenType::OP_NEQ)));
+        }
+        else if (Current() == '>')
+        {
+            if (Peek() == '=')
+                mTokens.push_back(std::move(BuildTwoCharToken(">=", TokenType::OP_GRE)));
+            else
+                mTokens.push_back(std::move(BuildSingleCharToken(TokenType::OP_GRT)));
+        }
+        else if (Current() == '<')
+        {
+            if (Peek() == '=')
+                mTokens.push_back(std::move(BuildTwoCharToken(">=", TokenType::OP_LSE)));
+            else
+                mTokens.push_back(std::move(BuildSingleCharToken(TokenType::OP_LSS)));
         }
         else
         {

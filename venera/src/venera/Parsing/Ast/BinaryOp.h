@@ -24,6 +24,8 @@ namespace Venera::Parsing
             return mRhs;
         }
 
+        bool IsComparison() const;
+
         void Dump(int indent) override;
 
         LanguageType ResolveType() override;

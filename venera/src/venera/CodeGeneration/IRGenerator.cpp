@@ -30,6 +30,8 @@ llvm::Type* Venera::CodeGeneration::IRGenerator::MapType(const LanguageType& typ
 
                 case Lexing::TokenType::TY_F32: return mBuilder->getFloatTy();
                 case Lexing::TokenType::TY_F64: return mBuilder->getDoubleTy();
+
+                case Lexing::TokenType::TY_BOOL: return mBuilder->getIntNTy(1);
             }
 
             break;
@@ -69,6 +71,11 @@ llvm::Value* Venera::CodeGeneration::IRGenerator::GenerateExpression(const std::
     {
         return GenerateUnaryOperation(unary);
     }
+    else if (std::shared_ptr boolean = std::dynamic_pointer_cast<Parsing::Boolean>(expr))
+    {
+        llvm::Type* type = MapType(expr->ResolveType());
+        return llvm::ConstantInt::get(type, boolean->Value() ? 1 : 0);
+    }
     else
     {
         Error::Report("No generator for expression", expr->Token(), ErrorCode::E0003_INTERNAL_COMPILER_ERROR);
@@ -95,6 +102,7 @@ llvm::Value* Venera::CodeGeneration::IRGenerator::GenerateBinaryOperation(const 
     }
 
     bool isSigned = !exprType.IsUnsigned();
+    bool isFloating = binop->Left()->ResolveType().IsFloating() || binop->Right()->ResolveType().IsFloating();
 
     switch (binop->Operator().type)
     {
@@ -109,6 +117,50 @@ llvm::Value* Venera::CodeGeneration::IRGenerator::GenerateBinaryOperation(const 
 
         case Lexing::TokenType::OP_DIV:
             return isSigned ? mBuilder->CreateSDiv(lhs, rhs, "div") : mBuilder->CreateUDiv(lhs, rhs, "div");
+
+        case Lexing::TokenType::OP_EQ:
+            if (isFloating)
+                return mBuilder->CreateFCmpOEQ(lhs, rhs, "eq");
+
+            return mBuilder->CreateICmpEQ(lhs, rhs, "eq");
+
+        case Lexing::TokenType::OP_NEQ:
+            if (isFloating)
+                return mBuilder->CreateFCmpONE(lhs, rhs, "neq");
+
+            return mBuilder->CreateICmpNE(lhs, rhs, "neq");
+
+        case Lexing::TokenType::OP_LSS:
+            if (isFloating)
+                return mBuilder->CreateFCmpOLT(lhs, rhs, "lss");
+
+            return isSigned
+                ? mBuilder->CreateICmpSLT(lhs, rhs, "lss")
+                : mBuilder->CreateICmpULT(lhs, rhs, "lss");
+
+        case Lexing::TokenType::OP_GRT:
+            if (isFloating)
+                return mBuilder->CreateFCmpOGT(lhs, rhs, "lse");
+
+            return isSigned
+                ? mBuilder->CreateICmpSGT(lhs, rhs, "grt")
+                : mBuilder->CreateICmpUGT(lhs, rhs, "grt");
+
+        case Lexing::TokenType::OP_LSE:
+            if (isFloating)
+                return mBuilder->CreateFCmpOLE(lhs, rhs, "lse");
+
+            return isSigned
+                ? mBuilder->CreateICmpSLE(lhs, rhs, "lse")
+                : mBuilder->CreateICmpULE(lhs, rhs, "lse");
+
+        case Lexing::TokenType::OP_GRE:
+            if (isFloating)
+                return mBuilder->CreateFCmpOGE(lhs, rhs, "gre");
+
+            return isSigned
+                ? mBuilder->CreateICmpSGE(lhs, rhs, "gre")
+                : mBuilder->CreateICmpUGE(lhs, rhs, "gre");
 
         default:
             Error::Report("Unknown operator", binop->Token(), ErrorCode::E0003_INTERNAL_COMPILER_ERROR);

@@ -20,6 +20,7 @@ Venera::LanguageType Venera::LanguageType::UInt32 = { .kind = LanguageTypeKind::
 Venera::LanguageType Venera::LanguageType::UInt64 = { .kind = LanguageTypeKind::PRIMITIVE, .primitiveType = TokenType::TY_U64 };
 Venera::LanguageType Venera::LanguageType::Float32 = { .kind = LanguageTypeKind::PRIMITIVE, .primitiveType = TokenType::TY_F32 };
 Venera::LanguageType Venera::LanguageType::Float64 = { .kind = LanguageTypeKind::PRIMITIVE, .primitiveType = TokenType::TY_F64 };
+Venera::LanguageType Venera::LanguageType::Boolean = { .kind = LanguageTypeKind::PRIMITIVE, .primitiveType = TokenType::TY_BOOL };
 
 std::string Venera::LanguageType::ToString() const
 {
@@ -60,6 +61,9 @@ std::string Venera::LanguageType::ToString() const
                     break;
                 case TokenType::TY_F64:
                     ss << "F64";
+                    break;
+                case TokenType::TY_BOOL:
+                    ss << "BOOL";
                     break;
                 default:
                     ss << "UNKNOWN";
@@ -112,6 +116,14 @@ bool Venera::LanguageType::IsNumeric() const
         TokenType::TY_F32, TokenType::TY_F64);
 }
 
+bool Venera::LanguageType::IsFloating() const
+{
+    if (kind != LanguageTypeKind::PRIMITIVE)
+        return false;
+
+    return IsOneOf(primitiveType, TokenType::TY_F32, TokenType::TY_F64);
+}
+
 bool Venera::LanguageType::CanCoerce(const LanguageType& a, const LanguageType& b)
 {
     return a.IsNumeric() && b.IsNumeric();
@@ -143,5 +155,6 @@ Venera::LanguageType Venera::LanguageType::CommonNumericType(const LanguageType&
     if (!a.IsNumeric() || !b.IsNumeric() || a != b)
         return LanguageType::Runtime;
 
+    // In the future we'll have to handle numeric coercion
     return a;
 }

@@ -62,6 +62,7 @@ namespace Venera::Parsing
         std::shared_ptr<Expression> ParseUnary();
         std::shared_ptr<Expression> ParseTerm();
         std::shared_ptr<Expression> ParseArithmetic();
+        std::shared_ptr<Expression> ParseComparison();
 
         std::shared_ptr<Expression> ParseExpression();
 

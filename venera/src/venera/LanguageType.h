@@ -26,6 +26,7 @@ namespace Venera
         static LanguageType UInt64;
         static LanguageType Float32;
         static LanguageType Float64;
+        static LanguageType Boolean;
 
         LanguageTypeKind kind = LanguageTypeKind::INVALID;
         Lexing::TokenType primitiveType = Lexing::TokenType::NONE;
@@ -37,6 +38,7 @@ namespace Venera
 
         bool IsUnsigned() const;
         bool IsNumeric() const;
+        bool IsFloating() const;
 
         bool FitsUnsignedValue(uint64 value) const;
 

@@ -27,8 +27,17 @@ const char* Venera::Lexing::ToString(TokenType type)
         TOKEN(TY_I16);
         TOKEN(TY_I32);
         TOKEN(TY_I64);
+        TOKEN(TY_BOOL);
         TOKEN(LIT_BASE10);
         TOKEN(LIT_FLOATING);
+        TOKEN(LIT_TRUE);
+        TOKEN(LIT_FALSE);
+        TOKEN(OP_EQ);
+        TOKEN(OP_NEQ);
+        TOKEN(OP_GRT);
+        TOKEN(OP_GRE);
+        TOKEN(OP_LSS);
+        TOKEN(OP_LSE);
         default: return "UNKNOWN";
     }
 }

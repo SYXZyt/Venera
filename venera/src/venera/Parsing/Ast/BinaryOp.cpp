@@ -1,6 +1,15 @@
 #include "BinaryOp.h"
 #include <print>
 #include <string>
+#include <venera/Helpers.h>
+
+bool Venera::Parsing::BinaryOp::IsComparison() const
+{
+    return IsOneOf(mOp.type,
+        Lexing::TokenType::OP_EQ, Lexing::TokenType::OP_NEQ,
+        Lexing::TokenType::OP_GRT, Lexing::TokenType::OP_GRE,
+        Lexing::TokenType::OP_LSS, Lexing::TokenType::OP_LSE);
+}
 
 void Venera::Parsing::BinaryOp::Dump(int indent)
 {
@@ -11,6 +20,9 @@ void Venera::Parsing::BinaryOp::Dump(int indent)
 
 Venera::LanguageType Venera::Parsing::BinaryOp::ResolveType()
 {
+    if (IsComparison())
+        return LanguageType::Boolean;
+
     LanguageType lhs = mLhs->ResolveType();
     LanguageType rhs = mRhs->ResolveType();
 

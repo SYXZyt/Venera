@@ -107,6 +107,8 @@ bool Venera::Parsing::Parser::CheckType()
 
         case Lexing::TokenType::TY_F32:
         case Lexing::TokenType::TY_F64:
+
+        case Lexing::TokenType::TY_BOOL:
             return true;
 
         default:
@@ -204,6 +206,11 @@ std::shared_ptr<Venera::Parsing::Expression> Venera::Parsing::Parser::ParsePrima
         return ParseBase10();
     else if (Accept(Lexing::TokenType::LIT_FLOATING))
         return ParseFloating();
+    else if (Accept({ Lexing::TokenType::LIT_TRUE, Lexing::TokenType::LIT_FALSE }))
+    {
+        bool value = Last().type == Lexing::TokenType::LIT_TRUE;
+        return std::make_shared<Boolean>(Last(), value);
+    }
 
     Error::Report("Expected expression", Current(), ErrorCode::E2005_EXPECTED_EXPRESSION);
     FileTracker::AddError(Current().file);
@@ -278,9 +285,30 @@ std::shared_ptr<Venera::Parsing::Expression> Venera::Parsing::Parser::ParseArith
     return left;
 }
 
+std::shared_ptr<Venera::Parsing::Expression> Venera::Parsing::Parser::ParseComparison()
+{
+    Lexing::Token t = Current();
+    std::shared_ptr left = ParseArithmetic();
+
+    while (Accept({ Lexing::TokenType::OP_EQ, Lexing::TokenType::OP_NEQ,
+        Lexing::TokenType::OP_LSS, Lexing::TokenType::OP_LSE,
+        Lexing::TokenType::OP_GRT, Lexing::TokenType::OP_GRE }))
+    {
+        Lexing::Token op = Last();
+
+        std::shared_ptr right = ParseArithmetic();
+        if (!right)
+            return nullptr;
+
+        left = std::make_shared<BinaryOp>(t, left, right, op);
+    }
+
+    return left;
+}
+
 std::shared_ptr<Venera::Parsing::Expression> Venera::Parsing::Parser::ParseExpression()
 {
-    return ParseArithmetic();
+    return ParseComparison();
 }
 
 std::optional<Venera::LanguageType> Venera::Parsing::Parser::ParseType()

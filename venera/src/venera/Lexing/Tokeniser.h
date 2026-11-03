@@ -33,6 +33,10 @@ namespace Venera::Lexing
 
             { "F32", TokenType::TY_F32 },
             { "F64", TokenType::TY_F64 },
+
+            { "BOOL", TokenType::TY_BOOL },
+            { "TRUE", TokenType::LIT_TRUE },
+            { "FALSE", TokenType::LIT_FALSE },
         };
 
         std::vector<Token> mTokens;
@@ -57,6 +61,7 @@ namespace Venera::Lexing
         Token BuildNumeric(NumericCharCheck check, TokenType type);
 
         Token BuildSingleCharToken(TokenType type);
+        Token BuildTwoCharToken(std::string_view lexeme, TokenType type);
 
     public:
         const std::vector<Token>& GetTokens() const {

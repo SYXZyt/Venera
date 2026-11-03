@@ -16,12 +16,16 @@
 
 std::string gInput = R"(
 PROGRAM DO
-    DEF I32 Foo DO
-        RETURN (1 + 2) * 1
+    DEF BOOL True DO
+        RETURN 1 == 1
+    END
+
+    DEF BOOL False DO
+        RETURN 1. != 1.
     END
 
     DEF I32 Main DO
-        RETURN (1 + 2) * -1
+        RETURN 0
     END
 END
 )";

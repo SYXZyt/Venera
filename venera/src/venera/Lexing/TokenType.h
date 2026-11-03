@@ -23,6 +23,13 @@ namespace Venera::Lexing
         OP_MUL,
         OP_DIV,
 
+        OP_EQ,
+        OP_NEQ,
+        OP_GRT,
+        OP_GRE,
+        OP_LSS,
+        OP_LSE,
+
         TY_U8,
         TY_U16,
         TY_U32,
@@ -36,8 +43,12 @@ namespace Venera::Lexing
         TY_F32,
         TY_F64,
 
+        TY_BOOL,
+
         LIT_BASE10,
         LIT_FLOATING,
+        LIT_TRUE,
+        LIT_FALSE,
     };
 
     extern const char* ToString(TokenType type);
